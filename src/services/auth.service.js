@@ -8,15 +8,16 @@ const CLIENT_URL = process.env.CLIENT_URL;
 
 class AuthService {
   async requestResetPassword(identifier) {
-    const user = await docGiaModel.findOne(
-      { 
-        $or:[{Email: identifier.trim().toLowerCase()}, {SoDienThoai: identifier.trim().toLowerCase()}]
-      }
-    );
+    const user = await docGiaModel.findOne({
+      $or: [
+        { Email: identifier.trim().toLowerCase() },
+        { SoDienThoai: identifier.trim().toLowerCase() },
+      ],
+    });
     if (!user) {
-        return {
-            message: 'Không tìm thấy người dùng có tài khoản này.'
-        }
+      return {
+        message: "Không tìm thấy người dùng có tài khoản này.",
+      };
     }
     //random token
     const token = crypto.randomBytes(32).toString("hex");
@@ -25,7 +26,7 @@ class AuthService {
     await ResetToken.create({
       DocGiaId: user._id,
       Token: token,
-      expiresAt
+      expiresAt,
     });
 
     const resetLink = `${CLIENT_URL}/reset-password/${token}`;
@@ -33,8 +34,8 @@ class AuthService {
       <p>Bạn vừa yêu cầu khôi phục mật khẩu.</p>
       <p>Click vào đây để đặt lại mật khẩu: <a href="${resetLink}">${resetLink}</a></p>
       <p>Liên kết có hiệu lực trong 1 tiếng.</p>
-    `
-    await sendMail(user.Email, "Khôi phục mật khẩu", html );
+    `;
+    await sendMail(user.Email, "Khôi phục mật khẩu", html);
 
     return { message: "Email khôi phục mật khẩu đã được gửi." };
   }
@@ -42,7 +43,7 @@ class AuthService {
   async resetPassword(token, newPassword) {
     const resetToken = await ResetToken.findOne({
       Token: token,
-      expiresAt: { $gt: new Date() }
+      expiresAt: { $gt: new Date() },
     });
 
     if (!resetToken) throw new Error("Token không hợp lệ hoặc đã hết hạn.");
