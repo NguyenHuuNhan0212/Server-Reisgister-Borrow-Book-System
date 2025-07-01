@@ -75,15 +75,53 @@ module.exports = class DocGiaService {
       const token = jwt.sign(
         readerInfo,
         process.env.JWT_SECRET || "NienLuanNganh",
-        { expiresIn: "1h" }
+        { expiresIn: "30s" }
       );
+      const refreshToken = jwt.sign(
+        { id: reader._id },
+        process.env.JWT_REFRESH_SECRET || "RefreshSecretKey",
+        { expiresIn: "7d" }
+      );
+      await docGiaModel.findByIdAndUpdate(reader._id, {
+        RefreshToken: refreshToken,
+      });
       return {
         token,
+        refreshToken,
         reader: readerInfo,
         message: "Đăng nhập thành công.",
       };
     }
   }
+  async refreshAccessToken(refreshToken) {
+    if (!refreshToken) {
+      return { message: "Thiếu refresh token." };
+    }
+
+    try {
+      const decoded = jwt.verify(
+        refreshToken,
+        process.env.JWT_REFRESH_SECRET || "RefreshSecretKey"
+      );
+
+      const reader = await docGiaModel.findById(decoded.id).select("-Password");
+      //console.log("Reader:", reader);
+      if (!reader || reader.RefreshToken !== refreshToken) {
+        return { message: "Refresh token không hợp lệ." };
+      }
+
+      const accessToken = jwt.sign(
+        reader._doc,
+        process.env.JWT_SECRET || "NienLuanNganh",
+        { expiresIn: "1h" }
+      );
+
+      return { token: accessToken };
+    } catch (err) {
+      return { message: "Refresh token hết hạn hoặc không hợp lệ." };
+    }
+  }
+
   async updateAccount(id, data) {
     const kiemTraReader = await docGiaModel.findOne({
       _id: { $ne: id },
