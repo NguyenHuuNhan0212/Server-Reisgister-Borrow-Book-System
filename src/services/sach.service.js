@@ -48,16 +48,60 @@ module.exports = class SachService {
       };
     }
   }
-  async getOne(MaSach) {
-    const book = await sachModel
-      .findOne({
-        MaSach: MaSach,
+  async getListBooksHot() {
+    const bookList = await sachModel
+      .find({
+        SoLuongDaMuon: { $gt: 10 },
       })
       .populate([
         { path: "TacGia", select: "TenTG" },
         { path: "MaNXB", select: "TenNXB" },
         { path: "MaLoai", select: "TenLoai" },
         { path: "MaViTri", select: "TenViTri" },
+      ]);
+    if (bookList.length === 0) {
+      return {
+        message: "Không có sách.",
+      };
+    } else {
+      return {
+        message: "Lấy danh sách sách hot thành công.",
+        danhsachsach: bookList,
+      };
+    }
+  }
+  async getListBooksNew() {
+    const bookList = await sachModel
+      .find()
+      .sort({ MaSach: -1 })
+      .populate([
+        { path: "TacGia", select: "TenTG" },
+        { path: "MaNXB", select: "TenNXB" },
+        { path: "MaLoai", select: "TenLoai" },
+        { path: "MaViTri", select: "TenViTri" },
+      ])
+      .limit(10);
+    if (bookList.length === 0) {
+      return {
+        message: "Không có sách.",
+      };
+    } else {
+      return {
+        message: "Lấy danh sách sách mới thành công.",
+        danhsachsach: bookList,
+      };
+    }
+  }
+  async getOne(MaSach) {
+    const book = await sachModel
+      .findOne({
+        MaSach: MaSach,
+      })
+      .populate([
+        { path: "TacGia" },
+        { path: "MaNXB" },
+        { path: "MaLoai" },
+        { path: "MaViTri" },
       ]);
     if (!book) {
       return {

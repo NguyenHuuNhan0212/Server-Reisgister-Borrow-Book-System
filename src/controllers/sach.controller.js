@@ -23,6 +23,28 @@ module.exports.getAll = async (req, res, next) => {
     next(new ApiError(500, "Lỗi khi lấy danh sách sách."));
   }
 };
+//[GET] /books/hot
+module.exports.getListBookHot = async (req, res, next) => {
+  try {
+    const sachService = new SachService();
+    const book = await sachService.getListBooksHot();
+    return res.status(201).json(book);
+  } catch (error) {
+    console.log(error);
+    next(new ApiError(500, "Lỗi khi lấy danh sách sách hot."));
+  }
+};
+//[GET] /books/new
+module.exports.getListBooksNew = async (req, res, next) => {
+  try {
+    const sachService = new SachService();
+    const book = await sachService.getListBooksNew();
+    return res.status(201).json(book);
+  } catch (error) {
+    console.log(error);
+    next(new ApiError(500, "Lỗi khi lấy danh sách sách mới."));
+  }
+};
 //[GET] /books/:MaSach
 module.exports.getOne = async (req, res, next) => {
   try {

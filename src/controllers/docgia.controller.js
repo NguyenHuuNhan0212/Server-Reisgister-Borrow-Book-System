@@ -70,7 +70,7 @@ module.exports.changePassword = async (req, res, next) => {
 module.exports.refreshToken = async (req, res, next) => {
   try {
     const refreshToken = req.body?.refreshToken;
-    console.log("Refresh Token:", refreshToken);
+    //console.log("Refresh Token:", refreshToken);
     if (!refreshToken) {
       return next(new ApiError(400, "Refresh token không được để trống."));
     }
