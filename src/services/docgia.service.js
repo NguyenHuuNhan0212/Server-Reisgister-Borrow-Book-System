@@ -113,7 +113,7 @@ module.exports = class DocGiaService {
       const accessToken = jwt.sign(
         reader._doc,
         process.env.JWT_SECRET || "NienLuanNganh",
-        { expiresIn: "1h" }
+        { expiresIn: "30s" }
       );
 
       return { token: accessToken };
