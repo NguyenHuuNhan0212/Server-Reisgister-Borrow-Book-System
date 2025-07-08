@@ -9,7 +9,10 @@ const verifyTokenUser = (req, res, next) => {
       .json({ message: "Access denied. No token provided." });
 
   jwt.verify(token, process.env.JWT_SECRET || "NienLuanNganh", (err, user) => {
-    if (err) return res.status(403).json({ message: "Invalid token." });
+    if (err) {
+      console.log("❌ Lỗi xác thực token:", err.message);
+      return res.status(403).json({ message: "Invalid token." });
+    }
     req.user = user;
     next();
   });

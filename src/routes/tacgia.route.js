@@ -4,7 +4,7 @@ const tacGiaController = require("../controllers/tacgia.controller");
 const { verifyTokenStaff } = require("../middlewares/verifyToken");
 
 router
-  .get("/", verifyTokenStaff, tacGiaController.getAll)
+  .get("/", tacGiaController.getAll)
   .get("/:id", verifyTokenStaff, tacGiaController.getOne)
   .post("/", verifyTokenStaff, tacGiaController.add)
   .patch("/:id", verifyTokenStaff, tacGiaController.update)

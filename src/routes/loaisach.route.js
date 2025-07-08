@@ -5,7 +5,7 @@ const { verifyTokenStaff } = require("../middlewares/verifyToken");
 
 router
   .post("/", verifyTokenStaff, loaiSachController.addLoaiSach)
-  .get("/", verifyTokenStaff, loaiSachController.getAll)
+  .get("/", loaiSachController.getAll)
   .get("/:MaLoai", verifyTokenStaff, loaiSachController.getOne)
   .patch("/:MaLoai", verifyTokenStaff, loaiSachController.update)
   .delete("/:MaLoai", verifyTokenStaff, loaiSachController.delete);

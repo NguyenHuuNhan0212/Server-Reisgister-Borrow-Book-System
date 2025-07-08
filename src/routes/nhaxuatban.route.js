@@ -5,7 +5,7 @@ const { verifyTokenStaff } = require("../middlewares/verifyToken");
 
 router
   .post("/", verifyTokenStaff, nxbController.addPublisher)
-  .get("/", verifyTokenStaff, nxbController.getAllPublisher)
+  .get("/", nxbController.getAllPublisher)
   .get("/:MaNXB", verifyTokenStaff, nxbController.getOnePublisher)
   .patch("/:MaNXB", verifyTokenStaff, nxbController.update)
   .delete("/:MaNXB", verifyTokenStaff, nxbController.delete);
