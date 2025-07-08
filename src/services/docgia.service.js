@@ -6,6 +6,22 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 module.exports = class DocGiaService {
+  async getMyAccount(id) {
+    const reader = await docGiaModel
+      .findById(id)
+      .select("-Password")
+      .populate("MaTT");
+    if (!reader) {
+      return {
+        message: "Tài khoản độc giả không tồn tại.",
+      };
+    } else {
+      return {
+        reader,
+        message: "Lấy thông tin tài khoản thành công.",
+      };
+    }
+  }
   async register(data) {
     const kiemTraDG = await docGiaModel.findOne({
       $or: [

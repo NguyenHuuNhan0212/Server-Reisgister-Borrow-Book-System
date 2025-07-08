@@ -9,6 +9,7 @@ const {
 
 // doc gia
 router
+  .get("/me", verifyTokenUser, docGiaController.getMyAccount)
   .post("/register", docGiaController.register)
   .post("/login", docGiaController.login)
   .post("/refresh-token", docGiaController.refreshToken)

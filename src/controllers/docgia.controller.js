@@ -1,6 +1,20 @@
 const ApiError = require("../ApiError");
 const DocGiaService = require("../services/docgia.service");
 
+// [GET] /readers/me
+module.exports.getMyAccount = async (req, res, next) => {
+  try {
+    const reader = req.user;
+    const docGiaService = new DocGiaService();
+    const result = await docGiaService.getMyAccount(reader._id);
+    return res.status(200).json(result);
+  } catch (err) {
+    console.log(err);
+    return next(
+      new ApiError(500, "Lỗi khi lấy thông tin tài khoản người dùng.")
+    );
+  }
+};
 //[POST] /readers/register
 module.exports.register = async (req, res, next) => {
   try {
