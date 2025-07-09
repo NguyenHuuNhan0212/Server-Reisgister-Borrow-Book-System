@@ -169,14 +169,30 @@ module.exports = class DocGiaService {
     }
   }
   async deleteAccount(id) {
-    const account = await docGiaModel.findByIdAndDelete(id).select("-Password");
+    const account = await docGiaModel.findById(id).select("-Password");
     if (!account) {
       return {
         message: "Tài khoản không tồn tại.",
       };
     } else {
+      const trangThaiDaLay = await trangThaiMuonModel.findOne({
+        TenTrangThai: "đã lấy",
+      });
+      const accountborrowing = await muonSachModel.find({
+        MaDocGia: id,
+        MaTrangThai: trangThaiDaLay._id,
+      });
+      if (accountborrowing) {
+        return {
+          message:
+            "Bạn đang giữ sách của thư viện vui lòng trả sách trước khi xóa tài khoản.",
+        };
+      }
+      const deletedAccount = await docGiaModel
+        .findByIdAndDelete(id)
+        .select("-Password");
       return {
-        deletedAccount: account,
+        deletedAccount,
         message: "Xóa tài khoản thành công.",
       };
     }

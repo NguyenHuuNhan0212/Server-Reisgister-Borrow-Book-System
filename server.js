@@ -28,7 +28,7 @@ app.use((err, req, res, next) => {
     message: err.message || "Internal Server Error",
   });
 });
-cron.schedule("51 8 * * *", async () => {
+cron.schedule("45 16 * * *", async () => {
   const result = await new docGiaService().blockReaderLateTimeFiveDays();
   console.log(`[CRON] ${new Date().toLocaleString()} - ${result.message}`);
 });
