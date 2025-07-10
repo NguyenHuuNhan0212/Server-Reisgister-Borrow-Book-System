@@ -57,11 +57,11 @@ module.exports = class MuonSachService {
     // 5. Kiểm tra số sách độc giả đang mượn chưa trả
     const soLuongDangMuon = await muonSachModel.countDocuments({
       MaDocGia,
-      MaTrangThai: maTrangThai,
+      $or: [{ MaTrangThai: maTrangThai }, { MaTrangThai: newMaTrangThai }],
     });
     if (soLuongDangMuon >= Number(process.env.MAX_BOOKS_PER_USER)) {
       return {
-        message: `Độc giả này đang mượn ${soLuongDangMuon} sách chưa trả. Vượt quá giới hạn ${process.env.MAX_BOOKS_PER_USER}.`,
+        message: `Bạn đã đăng ký mượn sách hoặc đang mượn ${soLuongDangMuon} quyển sách. Đã đạt giới hạn cho phép. Vui lòng kiểm tra lịch sử mượn.`,
       };
     }
     //Tạo phiếu mượn
@@ -123,6 +123,7 @@ module.exports = class MuonSachService {
         .find({
           MaDocGia: MaDocGia,
         })
+        .sort({ MaMuonSach: -1 })
         .populate([
           {
             path: "MaSach",
@@ -396,7 +397,7 @@ module.exports = class MuonSachService {
     <p>Quyển sách "${muonSach.MaSach.TenSach}" của bạn đã được gia hạn.</p>
     <p>Hạn trả mới là: <strong>${ngayTraMoi.toLocaleDateString()}</strong>.</p>`;
 
-    await sendMail(muonSach.MaDocGia?.Email, "Gia hạn mượn sách", html);
+    sendMail(muonSach.MaDocGia?.Email, "Gia hạn mượn sách", html);
 
     return {
       message: "Gia hạn mượn sách thành công.",
@@ -473,7 +474,7 @@ module.exports = class MuonSachService {
     await muonSachModel.deleteOne({ MaMuonSach });
 
     return {
-      message: `Đã hủy thành công yêu cầu mượn sách "${phieuMuon.MaSach.TenSach}".`,
+      message: `Đã hủy thành công yêu cầu mượn sách.`,
     };
   }
 };
