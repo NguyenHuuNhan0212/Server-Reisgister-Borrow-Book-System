@@ -2,6 +2,8 @@ const crypto = require("crypto");
 const bcrypt = require("bcryptjs");
 const docGiaModel = require("../models/docgia.model");
 const ResetToken = require("../models/resettoken.model");
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 const { sendMail } = require("../utils/mailer");
 
 const CLIENT_URL = process.env.CLIENT_URL;
@@ -58,6 +60,34 @@ class AuthService {
     await ResetToken.deleteOne({ _id: resetToken._id });
 
     return { message: "Đặt lại mật khẩu thành công." };
+  }
+  async refreshAccessToken(refreshToken) {
+    if (!refreshToken) {
+      return { message: "Thiếu refresh token." };
+    }
+
+    try {
+      const decoded = jwt.verify(
+        refreshToken,
+        process.env.JWT_REFRESH_SECRET || "RefreshSecretKey"
+      );
+
+      const reader = await docGiaModel.findById(decoded.id).select("-Password");
+      //console.log("Reader:", reader);
+      if (!reader || reader.RefreshToken !== refreshToken) {
+        return { message: "Refresh token không hợp lệ." };
+      }
+
+      const accessToken = jwt.sign(
+        reader._doc,
+        process.env.JWT_SECRET || "NienLuanNganh",
+        { expiresIn: "30s" }
+      );
+
+      return { token: accessToken };
+    } catch (err) {
+      return { message: "Refresh token hết hạn hoặc không hợp lệ." };
+    }
   }
 }
 

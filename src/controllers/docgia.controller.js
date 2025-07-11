@@ -1,5 +1,6 @@
 const ApiError = require("../ApiError");
 const DocGiaService = require("../services/docgia.service");
+const AuthService = require("../services/auth.service");
 
 // [GET] /readers/me
 module.exports.getMyAccount = async (req, res, next) => {
@@ -79,20 +80,5 @@ module.exports.changePassword = async (req, res, next) => {
   } catch (err) {
     console.log(err);
     return next(new ApiError(500, "Lỗi khi đổi mật khẩu."));
-  }
-};
-module.exports.refreshToken = async (req, res, next) => {
-  try {
-    const refreshToken = req.body?.refreshToken;
-    //console.log("Refresh Token:", refreshToken);
-    if (!refreshToken) {
-      return next(new ApiError(400, "Refresh token không được để trống."));
-    }
-    const docGiaService = new DocGiaService();
-    const result = await docGiaService.refreshAccessToken(refreshToken);
-    return res.status(200).json(result);
-  } catch (err) {
-    console.log(err);
-    return next(new ApiError(500, "Lỗi khi làm mới token."));
   }
 };

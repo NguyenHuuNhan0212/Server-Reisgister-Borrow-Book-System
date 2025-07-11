@@ -109,35 +109,6 @@ module.exports = class DocGiaService {
       };
     }
   }
-  async refreshAccessToken(refreshToken) {
-    if (!refreshToken) {
-      return { message: "Thiếu refresh token." };
-    }
-
-    try {
-      const decoded = jwt.verify(
-        refreshToken,
-        process.env.JWT_REFRESH_SECRET || "RefreshSecretKey"
-      );
-
-      const reader = await docGiaModel.findById(decoded.id).select("-Password");
-      //console.log("Reader:", reader);
-      if (!reader || reader.RefreshToken !== refreshToken) {
-        return { message: "Refresh token không hợp lệ." };
-      }
-
-      const accessToken = jwt.sign(
-        reader._doc,
-        process.env.JWT_SECRET || "NienLuanNganh",
-        { expiresIn: "30s" }
-      );
-
-      return { token: accessToken };
-    } catch (err) {
-      return { message: "Refresh token hết hạn hoặc không hợp lệ." };
-    }
-  }
-
   async updateAccount(id, data) {
     const kiemTraReader = await docGiaModel.findOne({
       _id: { $ne: id },

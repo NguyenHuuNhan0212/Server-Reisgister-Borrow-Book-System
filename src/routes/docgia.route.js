@@ -12,7 +12,6 @@ router
   .get("/me", verifyTokenUser, docGiaController.getMyAccount)
   .post("/register", docGiaController.register)
   .post("/login", docGiaController.login)
-  .post("/refresh-token", docGiaController.refreshToken)
   .delete("/me", verifyTokenUser, docGiaController.deleteMyAccount)
   .patch("/change-password", verifyTokenUser, docGiaController.changePassword)
   .patch("/me", verifyTokenUser, docGiaController.updateAccount)

@@ -64,10 +64,19 @@ module.exports = class NhanVienService {
       const token = jwt.sign(
         staffInfo,
         process.env.JWT_SECRET || "NienLuaNganh",
-        { expiresIn: "1h" }
+        { expiresIn: "30s" }
       );
+      const refreshToken = jwt.sign(
+        { id: staff._id },
+        process.env.JWT_REFRESH_SECRET || "RefreshSecretKey",
+        { expiresIn: "7d" }
+      );
+      await nhanVienModel.findByIdAndUpdate(staff._id, {
+        RefreshToken: refreshToken,
+      });
       return {
         token,
+        refreshToken,
         nhanvien: staffInfo,
         message: "Đăng nhập thành công.",
       };
