@@ -67,7 +67,10 @@ module.exports = class NhanVienService {
         { expiresIn: "30s" }
       );
       const refreshToken = jwt.sign(
-        { id: staff._id },
+        {
+          id: staff._id,
+          ChucVu: staff.ChucVu,
+        },
         process.env.JWT_REFRESH_SECRET || "RefreshSecretKey",
         { expiresIn: "7d" }
       );

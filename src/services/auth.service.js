@@ -5,6 +5,7 @@ const ResetToken = require("../models/resettoken.model");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const { sendMail } = require("../utils/mailer");
+const nhanvienModel = require("../models/nhanvien.model");
 
 const CLIENT_URL = process.env.CLIENT_URL;
 
@@ -71,15 +72,20 @@ class AuthService {
         refreshToken,
         process.env.JWT_REFRESH_SECRET || "RefreshSecretKey"
       );
+      let user;
+      if (decoded.ChucVu) {
+        user = await nhanvienModel.findById(decoded.id).select("-Password");
+      } else {
+        user = await docGiaModel.findById(decoded.id).select("-Password");
+      }
 
-      const reader = await docGiaModel.findById(decoded.id).select("-Password");
       //console.log("Reader:", reader);
-      if (!reader || reader.RefreshToken !== refreshToken) {
+      if (!user || user.RefreshToken !== refreshToken) {
         return { message: "Refresh token không hợp lệ." };
       }
 
       const accessToken = jwt.sign(
-        reader._doc,
+        user._doc,
         process.env.JWT_SECRET || "NienLuanNganh",
         { expiresIn: "30s" }
       );
