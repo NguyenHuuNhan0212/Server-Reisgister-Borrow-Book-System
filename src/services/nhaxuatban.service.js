@@ -109,7 +109,7 @@ module.exports = class NhaXuatBanService {
         nhaxuatban._id
       );
       return {
-        message: `Xóa nhà xuất bản có tên "${deletePublisher.TenNXB}" thành công.`,
+        message: `Xóa nhà xuất bản thành công.`,
       };
     }
   }

@@ -103,7 +103,7 @@ module.exports = class LoaiSachService {
         categoryBook._id
       );
       return {
-        message: `Loại sách có tên "${deleteCategoryBook.TenLoai}" đã xóa thành công.`,
+        message: `Đã xóa loại sách thành công.`,
       };
     }
   }

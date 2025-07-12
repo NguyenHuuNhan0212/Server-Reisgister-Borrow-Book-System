@@ -6,6 +6,19 @@ const jwt = require("jsonwebtoken");
 const { findById, findByIdAndUpdate } = require("../models/counter");
 require("dotenv").config();
 module.exports = class NhanVienService {
+  async getMyAccount(id) {
+    const staff = await nhanVienModel.findById(id).select("-Password");
+    if (!staff) {
+      return {
+        message: "Nhân viên không tồn tại.",
+      };
+    } else {
+      return {
+        nhanvien: staff,
+        message: "Lấy thông tin nhân viên thành công.",
+      };
+    }
+  }
   async register(data) {
     const kiemTraNV = await nhanVienModel.findOne({
       $or: [

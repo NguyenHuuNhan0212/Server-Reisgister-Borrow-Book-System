@@ -129,3 +129,14 @@ module.exports.getAllReadersBlocked = async (req, res, next) => {
     );
   }
 };
+module.exports.getMyAccount = async (req, res, next) => {
+  try {
+    const staff = req.staff;
+    const nhanVienService = new NhanVienService();
+    const result = await nhanVienService.getMyAccount(staff._id);
+    return res.status(200).json(result);
+  } catch (err) {
+    console.log(err);
+    return next(new ApiError(500, "Lỗi khi lấy thông tin tài khoản cá nhân."));
+  }
+};

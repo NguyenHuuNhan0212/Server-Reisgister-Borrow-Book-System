@@ -3,6 +3,7 @@ const router = express.Router();
 const nhanVienController = require("../controllers/nhanvien.controller");
 const { verifyTokenStaff } = require("../middlewares/verifyToken");
 router
+  .get("/me", verifyTokenStaff, nhanVienController.getMyAccount)
   .post("/register", nhanVienController.StaffRegister)
   .post("/login", nhanVienController.login)
   .patch(

@@ -10,7 +10,9 @@ const nhanVienSchema = new mongoose.Schema(
     DiaChi: { type: String, required: true },
     // SoDienThoai VA Email FRONTEND check trước khi cho người dùng đăng ký
     SoDienThoai: { type: String, required: true },
+    NgaySinh: { type: Date, required: true },
     Email: { type: String, required: true },
+    Phai: { type: String, required: true },
     RefreshToken: { type: String },
   },
   {

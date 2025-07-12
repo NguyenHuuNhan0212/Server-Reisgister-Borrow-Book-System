@@ -98,7 +98,7 @@ module.exports = class ViTriModel {
       }
       const deletePosition = await viTriModel.findOneAndDelete({ MaViTri });
       return {
-        message: `Xóa vị trí tên "${deletePosition.TenViTri}" thành công.`,
+        message: `Đã xóa vị trí thành công.`,
       };
     }
   }
